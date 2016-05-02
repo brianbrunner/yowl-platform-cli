@@ -28,18 +28,20 @@ function listener(bot) {
   return function(buffer) {
     var line = buffer.toString();
     var truncatedLine = line.slice(0,line.length-1);
-    bot(platform, { sessionId: sessionId }, { message: truncatedLine }, function(err, context, event, cb) {
-      if (err) {
-        event.send(context, event, "Uh oh! Something went wrong!", function(err, context, event, response) {
-          process.stdout.write("> ");
-          cb(err, context, event);
-        });
-      } else {
-        process.stdout.write("> ");
-        cb(err, context, event);
-      }
-    });
+    bot(platform, { sessionId: sessionId }, { type: 'message', message: truncatedLine }, oncomplete);
   };
+}
+
+function oncomplete(err, context, event, cb) {
+  if (err) {
+    event.send(context, event, "Uh oh! Something went wrong!", function(err, context, event, response) {
+      process.stdout.write("> ");
+      cb(err, context, event);
+    });
+  } else {
+    process.stdout.write("> ");
+    cb(err, context, event);
+  }
 }
 
 exports = module.exports = function(bot) {
@@ -50,6 +52,7 @@ exports = module.exports = function(bot) {
     process.stdin.setRawMode(false);
     process.stdout.write("> ");
     process.stdin.on('data', listener(bot)); 
+    bot(platform, { sessionId: sessionId }, { type: 'authenticate' }, oncomplete);
 
   }
 
