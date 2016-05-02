@@ -1,5 +1,6 @@
 var argv = require('yargs').argv,
     local = argv.local,
+    auth = argv.auth,
     sessionId = argv.session || "local";
 
 // Define our platform characteristics
@@ -52,7 +53,9 @@ exports = module.exports = function(bot) {
     process.stdin.setRawMode(false);
     process.stdout.write("> ");
     process.stdin.on('data', listener(bot)); 
-    bot(platform, { sessionId: sessionId }, { type: 'authenticate' }, oncomplete);
+    if (auth) {
+      bot(platform, { sessionId: sessionId }, { type: 'authenticate' }, oncomplete);
+    }
 
   }
 
