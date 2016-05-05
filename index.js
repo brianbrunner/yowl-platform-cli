@@ -35,7 +35,7 @@ function listener(bot) {
 
 function oncomplete(err, context, event, cb) {
   if (err) {
-    event.send(context, event, "Uh oh! Something went wrong!", function(err, context, event, response) {
+    event.send("Uh oh! Something went wrong!", function(err, context, event, response) {
       process.stdout.write("> ");
       cb(err, context, event);
     });
