@@ -61,7 +61,8 @@ function listener(bot) {
   return function(buffer) {
     var line = buffer.toString();
     var truncatedLine = line.slice(0,line.length-1);
-    if (current_actions && !isNaN(parseInt(truncatedLine))) {
+    if (current_actions && !isNaN(parseInt(truncatedLine)) &&
+        parseInt(truncatedLine) < current_actions.length) {
       var action = current_actions[parseInt(truncatedLine)];
       current_actions = null;
       if (typeof action === "string") {
@@ -77,6 +78,7 @@ function listener(bot) {
         bot(platform, { sessionId: sessionId }, { type: 'action', message: action.payload, action: action.payload }, oncomplete);
       }
     } else {
+      current_actions = null;
       bot(platform, { sessionId: sessionId }, { type: 'message', message: truncatedLine }, oncomplete);
     }
   };
