@@ -22,7 +22,7 @@ var platform = module.exports = function(bot) {
 
 };
 
-platform.name = "local";
+platform.id = "local";
 platform.capabilities = ["say", "actions"];
 platform.send = function(context, event, response, cb) {
   if (typeof response == "string") {
