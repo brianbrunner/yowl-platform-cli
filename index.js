@@ -6,22 +6,36 @@ var argv = require('yargs').argv,
 // Define our platform characteristics
 
 var bot_name = "";
-var platform = {
-  name: "local",
-  capabilities: ["say", "actions"],
-  send: function(context, event, response, cb) {
-    if (typeof response == "string") {
-      console.log(bot_name + ' > ' + response);
-    } else {
-      console.log(bot_name + ' > ' + response.message);
-      if (response.actions) {
-        var actionsString = '[' + response.actions.join(',') + ']';
-        console.log(bot_name + ' > ' + actionsString);
-      }
+var platform = module.exports = function(bot) {
+
+  if (local) {
+
+    bot_name = bot.display_name;
+    process.stdin.setRawMode(false);
+    process.stdout.write("> ");
+    process.stdin.on('data', listener(bot)); 
+    if (auth) {
+      bot(platform, { sessionId: sessionId }, { type: 'authenticate' }, oncomplete);
     }
-    cb(null, context, event, response);
+
   }
+
 };
+
+platform.name = "local";
+platform.capabilities = ["say", "actions"];
+platform.send = function(context, event, response, cb) {
+  if (typeof response == "string") {
+    console.log(bot_name + ' > ' + response);
+  } else {
+    console.log(bot_name + ' > ' + response.message);
+    if (response.actions) {
+      var actionsString = '[' + response.actions.join(',') + ']';
+      console.log(bot_name + ' > ' + actionsString);
+    }
+  }
+  cb(null, context, event, response);
+}
 
 // Define our stdin listener
 
@@ -45,18 +59,3 @@ function oncomplete(err, context, event, cb) {
   }
 }
 
-exports = module.exports = function(bot) {
-
-  if (local) {
-
-    bot_name = bot.display_name;
-    process.stdin.setRawMode(false);
-    process.stdout.write("> ");
-    process.stdin.on('data', listener(bot)); 
-    if (auth) {
-      bot(platform, { sessionId: sessionId }, { type: 'authenticate' }, oncomplete);
-    }
-
-  }
-
-};
