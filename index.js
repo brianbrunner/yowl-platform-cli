@@ -32,7 +32,9 @@ platform.send = function(context, event, response, cb) {
   if (typeof response == "string") {
     console.log(bot_name + ' > ' + response);
   } else {
-    console.log(bot_name + ' > ' + response.message);
+    if (response.message) {
+      console.log(bot_name + ' > ' + response.message);
+    }
     if (response.actions) {
       current_actions = response.actions;
       var action_strings = response.actions.map(function(action) {
