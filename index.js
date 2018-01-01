@@ -68,7 +68,7 @@ function listener(bot) {
       var action = current_actions[parseInt(truncatedLine)];
       current_actions = null;
       if (typeof action === "string") {
-        bot(platform, { sessionId: sessionId }, { type: 'action', message: ''+action, action: action }, oncomplete);
+        bot(platform, { sessionId: sessionId }, { type: 'action', message: action, action: action }, oncomplete);
       } else if (action.url) {
         request(action.url, function (error, response, body) {
           var article = unfluff(body);
@@ -77,7 +77,7 @@ function listener(bot) {
           oncomplete(null, null, null, function() {});
         });
       } else {
-        bot(platform, { sessionId: sessionId }, { type: 'action', message: action.payload, action: action.payload }, oncomplete);
+        bot(platform, { sessionId: sessionId }, { type: 'action', message: ''+action.payload, action: action.payload }, oncomplete);
       }
     } else {
       current_actions = null;
